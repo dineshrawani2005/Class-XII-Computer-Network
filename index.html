@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CBSE Class XII File Handling Quiz</title>
+<style>
+:root{--bg:#050b2c;--panel:#0d1747;--panel2:#111f5e;--gold:#ffd54a;--gold2:#ff9f1c;--text:#f7f9ff;--muted:#aeb9df;--green:#21d07a;--red:#ff4d67;--blue:#36a8ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 50% 15%,#182d7c 0,#0a1450 28%,#050b2c 65%)}
+.app{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+.game{width:min(1200px,100%);background:rgba(5,11,44,.94);border:2px solid #263b91;border-radius:24px;box-shadow:0 25px 70px #0009;overflow:hidden}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid #263b91;background:#070f39}
+.logo{width:62px;height:62px;border:4px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-weight:900;color:var(--gold);font-size:23px;box-shadow:0 0 25px #ffd54a55}
+.title{font-size:clamp(18px,3vw,28px);font-weight:800;text-align:center}.money{font-size:18px;color:var(--gold);font-weight:800}
+.content{padding:20px}.progress-wrap{margin-bottom:18px}.progress-top{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:7px}
+.progress{height:9px;background:#202b61;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));width:2%;transition:.45s}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:18px}.main{min-width:0}
+.question-card{background:linear-gradient(145deg,#101d59,#0b1540);border:1px solid #314797;border-radius:18px;padding:24px;min-height:210px;display:flex;flex-direction:column;justify-content:center}
+.qno{color:var(--gold);font-weight:800;margin-bottom:10px}.question{font-size:clamp(19px,2.7vw,30px);line-height:1.3;font-weight:700}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.option{border:1px solid #4761ae;background:#101c52;color:white;padding:15px 18px;border-radius:12px;text-align:left;font-size:16px;cursor:pointer;transition:.2s}
+.option:hover:not(:disabled){transform:translateY(-2px);border-color:var(--gold);background:#172766}.option .letter{color:var(--gold);font-weight:900;margin-right:9px}
+.option.correct{background:#0b6b43;border-color:var(--green);animation:pop .35s}.option.wrong{background:#78233b;border-color:var(--red);animation:shake .35s}.option.removed{opacity:.18;pointer-events:none;text-decoration:line-through}.option:disabled{cursor:default}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}button{font:inherit}.life,.navbtn{border:1px solid #3d58a7;background:#111f5e;color:#fff;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:700}
+.life:hover:not(:disabled),.navbtn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}.life:disabled,.navbtn:disabled{opacity:.4;cursor:not-allowed}.skip{margin-left:auto}
+.feedback{display:none;margin-top:14px;padding:12px;border-radius:10px;font-weight:700;text-align:center}.feedback.show{display:block}.feedback.ok{background:#0b5b3c;color:#8ff0c2}.feedback.no{background:#681f37;color:#ffb1bd}
+.side{background:#090f38;border:1px solid #2b3d87;border-radius:18px;padding:14px;max-height:520px;overflow:auto}.side h3{margin:0 0 10px;color:var(--gold);font-size:15px;text-align:center}
+.ladder{display:flex;flex-direction:column-reverse;gap:4px}.step{display:flex;justify-content:space-between;padding:7px 9px;border-radius:7px;font-size:12px;color:#b9c4e6}.step.current{background:#b78313;color:#fff;font-weight:900}.step.safe{color:#fff}
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:12px}.pbtn{padding:7px 2px;border-radius:6px;border:1px solid #3d58a7;background:#111f5e;color:#fff;font-size:11px;cursor:pointer}.pbtn.answered{background:#0b6b43}.pbtn.review{background:#6b5515}.pbtn.current{outline:2px solid var(--gold)}
+.footer{padding:0 20px 20px;color:#8794c0;text-align:center;font-size:12px}
+.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:18px;z-index:10}.modal.show{display:grid}.result{width:min(600px,100%);background:linear-gradient(145deg,#111e59,#070d32);border:2px solid var(--gold);border-radius:22px;padding:28px;text-align:center;box-shadow:0 20px 80px #000}
+.result h2{color:var(--gold);font-size:30px;margin:0 0 8px}.big-money{font-size:42px;font-weight:900;color:#fff;margin:12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}.stat{background:#0b1540;border:1px solid #2c408c;border-radius:12px;padding:12px}.stat b{display:block;font-size:23px;color:var(--gold)}
+.primary{border:0;background:linear-gradient(90deg,var(--gold2),var(--gold));color:#111;padding:13px 24px;border-radius:10px;font-weight:900;cursor:pointer}
+@keyframes pop{50%{transform:scale(1.025)}}@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.side{max-height:none}.ladder{display:none}}
+@media(max-width:760px){.options{grid-template-columns:1fr}.question-card{min-height:190px;padding:18px}.header{padding:11px 14px}.logo{width:48px;height:48px;font-size:18px}.money{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="app"><div class="game">
+<header class="header"><div class="logo">CBSE</div><div class="title">Class XII • Computer Networking Quiz</div><div class="money">Class XII</div></header>
+<div class="content">
+<div class="progress-wrap"><div class="progress-top"><span id="progressText">Question 1 of 50</span><span id="percent">2%</span></div><div class="progress"><i id="bar"></i></div></div>
+<div class="layout">
+<main class="main">
+<section class="question-card"><div class="qno" id="qno">QUESTION 1</div><div class="question" id="question"></div></section>
+<div class="options" id="options"></div><div class="feedback" id="feedback"></div>
+<div class="controls">
+<button class="life" id="fifty">50:50</button><button class="life" id="poll">👥 Audience Poll</button><button class="life" id="review">⭐ Mark for Review</button><button class="life" id="clear">🧹 Clear Answer</button>
+<button class="navbtn" id="prev">⬅️ Previous</button><button class="navbtn" id="next">Next ➡️</button><button class="navbtn skip" id="skip">⏭️ Skip Question</button>
+</div>
+</main>
+<aside class="side"><h3>NETWORKING TOPICS</h3><div style="line-height:1.7;color:#b9c4e6;font-size:13px">LAN & WAN<br>Topologies & Devices<br>Protocols & Ports<br>IP & MAC Addressing<br>OSI & TCP/IP Models<br>Transmission Media</div><h3 style="margin-top:14px">QUESTION PALETTE</h3><div class="palette" id="palette"></div></aside>
+</div></div>
+<div class="footer">50 questions • Computer Networking • Class XII Computer Science • Lifelines can be used once • Mark for Review and Clear Answer supported</div>
+</div></div>
+<div class="modal" id="modal"><div class="result"><h2>🏆 Quiz Complete!</h2><div>Final Score</div><div class="big-money" id="finalMoney">0</div>
+<div class="stats"><div class="stat"><b id="score">0/50</b>Correct</div><div class="stat"><b id="pct">0%</b>Accuracy</div><div class="stat"><b id="answered">0</b>Answered</div></div>
+<p id="summary"></p><button class="primary" id="again">🔄 Play Again</button></div></div>
+
+<script>
+const questions=[
+["Which device connects multiple networks and forwards packets using IP addresses?","Hub","Switch","Router","Repeater",2],
+["Which topology connects every device to a central device?","Bus","Star","Ring","Mesh",1],
+["Which protocol is primarily used to transfer web pages securely?","HTTP","FTP","HTTPS","SMTP",2],
+["Which protocol is used to send e-mail from a client to a mail server?","SMTP","POP3","HTTP","FTP",0],
+["Which protocol is commonly used to receive e-mail and download messages?","SMTP","POP3","HTTP","ARP",1],
+["Which protocol allows a client to retrieve e-mail while keeping messages on the server for synchronization?","IMAP","FTP","SMTP","TELNET",0],
+["What is the full form of LAN?","Local Area Network","Large Access Network","Linked Area Node","Local Access Node",0],
+["What is the full form of WAN?","Wireless Area Network","Wide Area Network","Web Access Network","World Area Node",1],
+["Which protocol translates a domain name such as example.com into an IP address?","DNS","DHCP","ARP","TCP",0],
+["Which protocol automatically assigns IP configuration to hosts?","DNS","DHCP","FTP","SMTP",1],
+["Which protocol maps an IPv4 address to a MAC address on a local network?","ARP","DNS","HTTP","ICMP",0],
+["Which protocol is connection-oriented and provides reliable delivery?","UDP","IP","TCP","ARP",2],
+["Which transport-layer protocol is connectionless?","TCP","UDP","FTP","HTTP",1],
+["Which address uniquely identifies a network interface at the data-link layer?","IP address","MAC address","Port number","URL",1],
+["A MAC address is normally how many bits long?","32 bits","48 bits","64 bits","128 bits",1],
+["An IPv4 address is how many bits long?","16 bits","32 bits","64 bits","128 bits",1],
+["An IPv6 address is how many bits long?","32 bits","64 bits","96 bits","128 bits",3],
+["Which class of IPv4 address traditionally supports very large networks?","Class A","Class B","Class C","Class D",0],
+["Which IPv4 address range is used for multicast in classful addressing?","Class A","Class B","Class C","Class D",3],
+["Which of the following is a private IPv4 address?","8.8.8.8","172.20.5.10","1.1.1.1","203.0.113.5",1],
+["Which address is the IPv4 loopback address commonly used to refer to the local host?","127.0.0.1","192.168.1.1","255.255.255.255","0.0.0.0",0],
+["What is the main function of a switch in a LAN?","Route packets between the Internet and LAN","Forward frames using MAC addresses","Convert domain names to IP addresses","Assign IP addresses",1],
+["What is the main function of a hub?","Forward frames selectively using MAC tables","Regenerate and broadcast incoming signals to connected ports","Assign IP addresses","Route IP packets",1],
+["Which device is used to regenerate or strengthen a signal?","Router","Repeater","Gateway","Firewall",1],
+["Which network device can connect networks using different protocols?","Gateway","Hub","Repeater","NIC",0],
+["What does NIC stand for?","Network Interface Card","Network Internet Controller","Node Interface Cable","Network Internal Connector",0],
+["Which transmission medium uses pulses of light to carry data?","Twisted pair","Coaxial cable","Optical fibre","Infrared only",2],
+["Which guided medium generally provides the highest bandwidth and immunity to electromagnetic interference?","Twisted pair","Coaxial cable","Optical fibre","Telephone wire",2],
+["Which cable consists of a central conductor surrounded by insulation and a shield?","Twisted pair","Coaxial cable","Fibre optic","Ribbon cable",1],
+["Which transmission mode allows data to flow in both directions simultaneously?","Simplex","Half-duplex","Full-duplex","Broadcast",2],
+["In which mode can data travel in both directions, but not at the same time?","Simplex","Half-duplex","Full-duplex","Multiplex",1],
+["Which protocol is used for transferring files between computers?","FTP","SMTP","DNS","ARP",0],
+["Which protocol provides remote login to a computer but sends data without encryption?","SSH","TELNET","HTTPS","SFTP",1],
+["Which secure protocol is commonly used for remote login?","TELNET","FTP","SSH","HTTP",2],
+["Which protocol is responsible for error reporting and diagnostic messages in IP networks?","ICMP","SMTP","ARP","FTP",0],
+["What is the default port number of HTTP?","21","25","80","443",2],
+["What is the default port number of HTTPS?","53","110","143","443",3],
+["What is the default port number of FTP control connection?","20","21","23","25",1],
+["Which port is traditionally associated with SMTP?","25","53","80","110",0],
+["Which protocol is associated with port 53?","DNS","HTTP","FTP","POP3",0],
+["Which network layer is responsible for logical addressing and routing in the OSI model?","Physical","Data Link","Network","Transport",2],
+["Which OSI layer is responsible for end-to-end delivery and reliability?","Network","Transport","Session","Presentation",1],
+["Which OSI layer deals with frames and MAC addressing?","Physical","Data Link","Network","Transport",1],
+["Which OSI layer is closest to the end user and provides network services to applications?","Application","Transport","Network","Physical",0],
+["How many layers are there in the OSI reference model?","5","6","7","8",2],
+["How many layers are there in the TCP/IP model commonly taught in school networking?","3","4","5","7",1],
+["Which OSI layer converts data into a suitable format and may provide encryption or compression?","Session","Presentation","Transport","Data Link",1],
+["Which OSI layer establishes, manages and terminates communication sessions?","Session","Presentation","Network","Application",0],
+["Which protocol suite forms the foundation of communication on the Internet?","TCP/IP","HTML/CSS","USB","BIOS",0],
+["Which notation represents the subnet mask for a /24 IPv4 network?","255.255.0.0","255.255.255.0","255.0.255.0","255.255.255.255",1]
+];
+let idx=0,correct=0,answered=0,used50=false,usedPoll=false,locked=false,marked=new Set(),answers={};
+const $=id=>document.getElementById(id);
+function money(n){return "₹"+n.toLocaleString("en-IN")}
+function buildPalette(){ $("palette").innerHTML=questions.map((_,i)=>`<button class="pbtn" id="p${i}" onclick="gotoQ(${i})">${i+1}</button>`).join(""); }
+function updatePalette(){questions.forEach((_,i)=>{let b=$("p"+i);b.className="pbtn"+(answers[i]!==undefined?" answered ":"")+(marked.has(i)?" review ":"")+(i===idx?" current":"");});}
+function render(){
+ locked=false; $("prev").disabled=idx===0; $("next").textContent=idx===questions.length-1?"🏆 Submit Quiz":"Next ➡️";
+ const q=questions[idx]; $("qno").textContent=`QUESTION ${idx+1}`; $("question").textContent=q[0];
+ $("progressText").textContent=`Question ${idx+1} of ${questions.length}`; $("percent").textContent=Math.round((idx+1)/questions.length*100)+"%"; $("bar").style.width=((idx+1)/questions.length*100)+"%";
+  $("feedback").className="feedback";$("feedback").textContent="";
+ $("options").innerHTML=q.slice(1,5).map((x,i)=>`<button class="option" data-i="${i}"><span class="letter">${"ABCD"[i]}.</span>${x}</button>`).join("");
+ document.querySelectorAll(".option").forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+ if(answers[idx]!==undefined){const c=answers[idx];document.querySelector(`[data-i="${c}"]`).classList.add("correct");document.querySelectorAll(".option").forEach(b=>b.disabled=true);}
+ updatePalette();
+}
+function answer(choice){
+ if(locked)return; locked=true; answers[idx]=choice; answered++;
+ const q=questions[idx],buttons=[...document.querySelectorAll(".option")];buttons[q[5]].classList.add("correct");
+ const fb=$("feedback");
+ if(choice===q[5]){correct++;fb.textContent="✓ Correct! Excellent answer.";fb.className="feedback show ok";}
+ else{buttons[choice].classList.add("wrong");fb.textContent=`✗ Wrong answer. Correct answer: ${"ABCD"[q[5]]}. ${q[q[5]+1]}`;fb.className="feedback show no";}
+ buttons.forEach(b=>b.disabled=true);updatePalette();setTimeout(()=>locked=false,700);
+}
+function next(){if(idx===questions.length-1){finish();return}idx++;render();}
+function previous(){if(idx>0){idx--;render();}}
+function gotoQ(n){idx=n;render();}
+function use5050(){if(used50||locked||answers[idx]!==undefined)return;used50=true;$("fifty").disabled=true;const q=questions[idx],wrong=[0,1,2,3].filter(i=>i!==q[5]).sort(()=>Math.random()-.5).slice(0,2);wrong.forEach(i=>document.querySelector(`[data-i="${i}"]`).classList.add("removed"));}
+function poll(){if(usedPoll||locked||answers[idx]!==undefined)return;usedPoll=true;$("poll").disabled=true;const q=questions[idx],dist=[0,0,0,0];dist[q[5]]=62;let rem=38;[0,1,2,3].filter(i=>i!==q[5]).forEach((i,n)=>{let v=n===2?rem:Math.floor(Math.random()*Math.max(1,rem));dist[i]=v;rem-=v});alert("Audience Poll\n\nA: "+dist[0]+"%   B: "+dist[1]+"%\nC: "+dist[2]+"%   D: "+dist[3]+"%");}
+function toggleReview(){if(marked.has(idx))marked.delete(idx);else marked.add(idx);updatePalette();$("review").textContent=marked.has(idx)?"⭐ Reviewed":"⭐ Mark for Review";}
+function clearAnswer(){if(answers[idx]===undefined)return; if(answers[idx]===questions[idx][5])correct--; delete answers[idx]; answered=Math.max(0,answered-1); render();}
+function skip(){if(locked)return;$("feedback").textContent="⏭️ Question skipped."; $("feedback").className="feedback show";setTimeout(()=>{if(idx<questions.length-1)next();else finish()},400);}
+function finish(){ $("modal").classList.add("show");const pct=Math.round(correct/questions.length*100);$("finalMoney").textContent=`${correct}/${questions.length}`;$("score").textContent=`${correct}/${questions.length}`;$("pct").textContent=pct+"%";$("answered").textContent=answered;$("summary").textContent=`You answered ${correct} correctly out of ${questions.length} questions.`;}
+function restart(){idx=0;correct=0;answered=0;used50=false;usedPoll=false;locked=false;marked.clear();answers={};$("fifty").disabled=false;$("poll").disabled=false;$("review").textContent="⭐ Mark for Review";$("modal").classList.remove("show");render();}
+$("fifty").onclick=use5050;$("poll").onclick=poll;$("review").onclick=toggleReview;$("clear").onclick=clearAnswer;$("prev").onclick=previous;$("next").onclick=next;$("again").onclick=restart;
+buildPalette();render();
+</script>
+</body></html>
